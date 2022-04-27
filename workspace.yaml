@@ -1,0 +1,59 @@
+name: lab
+variables:
+  PACKAGES_PATH: /home/madridianfox/work/homework/lab/packages
+  APPS_ROOT: /home/madridianfox/work/homework/lab/apps
+  NETWORK: ${NETWORK:-ensi}
+  GROUP_ID: ${GROUP_ID:-1000}
+  USER_ID: ${USER_ID:-1000}
+  BASE_DOMAIN: ${BASE_DOMAIN:-lab.127.0.0.1.nip.io}
+  HOME_PATH: ${WORKSPACE_PATH}/home
+  DB_PASSWORD: ${DB_PASSWORD:-example}
+
+
+templates:
+  fpm-8.1:
+    path: ${WORKSPACE_PATH}/templates/fpm-8.1
+    compose_file: ${TPL_PATH}/docker-compose.yml
+    variables:
+      BASE_IMAGE: dockerhub.greensight.ru/ensi-tech/php-base-image:8.1-task-83916-2021jan28-1-swoole
+      APP_IMAGE: tpl-fpm-8.1:latest
+      NGINX_IMAGE: nginx:1.19-alpine
+
+services:
+  proxy:
+    path: ${WORKSPACE_PATH}/services/proxy
+    variables:
+      APP_IMAGE: jwilder/nginx-proxy:latest
+
+  database:
+    path: ${WORKSPACE_PATH}/services/database
+    variables:
+      APP_IMAGE: postgis/postgis:13-3.1
+
+  api:
+    extends: fpm-8.1
+    path: ${APPS_ROOT}/api
+    variables: {}
+    dependencies:
+      proxy:    [default]
+      database: [default, hook]
+  posts:
+    extends: fpm-8.1
+    path: ${APPS_ROOT}/posts
+    variables: {}
+    dependencies:
+      proxy:    [default]
+      database: [default, hook]
+  comments:
+    extends: fpm-8.1
+    path: ${APPS_ROOT}/comments
+    variables: { }
+    dependencies:
+      proxy: [default]
+      database: [default, hook]
+
+modules: {}
+  # telescope:
+  #   path: ${PACKAGES_PATH}/telescope
+  #   hosted_in: api
+  #   exec_path: ${PACKAGES_PATH}/telescope
