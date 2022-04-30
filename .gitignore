@@ -17,6 +17,9 @@
 !services/proxy/
 !services/proxy/**
 
+!services/kafka/
+!services/kafka/**
+
 !templates/
 !templates/fpm-8.1/
 !templates/fpm-8.1/**

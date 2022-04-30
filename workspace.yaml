@@ -30,6 +30,21 @@ services:
     variables:
       APP_IMAGE: postgis/postgis:13-3.1
 
+  kafka:
+    path: ${WORKSPACE_PATH}/services/kafka
+    compose_file: ${SVC_PATH}/kafka.yml
+    variables:
+      KAFKA_IMAGE: wurstmeister/kafka
+      ZOOKEEPER_IMAGE: wurstmeister/zookeeper
+  kafka-ui:
+    path: ${WORKSPACE_PATH}/services/kafka
+    compose_file: ${SVC_PATH}/kafka-ui.yml
+    variables:
+      APP_IMAGE: provectuslabs/kafka-ui
+    dependencies:
+      proxy: [ default ]
+      kafka: [ default ]
+
   api:
     extends: fpm-8.1
     path: ${APPS_ROOT}/api
@@ -52,8 +67,8 @@ services:
       proxy: [default]
       database: [default, hook]
 
-modules: {}
-  # telescope:
-  #   path: ${PACKAGES_PATH}/telescope
-  #   hosted_in: api
-  #   exec_path: ${PACKAGES_PATH}/telescope
+modules:
+  monitor:
+    path: ${PACKAGES_PATH}/monitor
+    hosted_in: api
+    exec_path: ${PACKAGES_PATH}/monitor
