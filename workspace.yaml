@@ -66,6 +66,11 @@ services:
     dependencies:
       elastic: [default]
 
+  grafana:
+    path: ${WORKSPACE_PATH}/services/grafana
+    variables:
+      APP_IMAGE: grafana/grafana-enterprise
+
   api:
     extends: fpm-8.1
     path: ${APPS_ROOT}/api
