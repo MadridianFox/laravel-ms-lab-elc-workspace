@@ -45,6 +45,27 @@ services:
       proxy: [ default ]
       kafka: [ default ]
 
+  elastic:
+    path: ${WORKSPACE_PATH}/services/elastic
+    compose_file: ${SVC_PATH}/elastic.yml
+    variables:
+      APP_IMAGE: elasticsearch:7.9.2
+      JAVA_MEMORY: '512m'
+  kibana:
+    path: ${WORKSPACE_PATH}/services/elastic
+    compose_file: ${SVC_PATH}/kibana.yml
+    variables:
+      APP_IMAGE: kibana:7.9.2
+    dependencies:
+      proxy: [ default ]
+      elastic: [ default ]
+  logstash:
+    path: ${WORKSPACE_PATH}/services/logstash
+    variables:
+      APP_IMAGE: logstash:7.9.2
+    dependencies:
+      elastic: [default]
+
   api:
     extends: fpm-8.1
     path: ${APPS_ROOT}/api

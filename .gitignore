@@ -20,6 +20,12 @@
 !services/kafka/
 !services/kafka/**
 
+!services/elastic/
+!services/elastic/**
+
+!services/logstash/
+!services/logstash/**
+
 !templates/
 !templates/fpm-8.1/
 !templates/fpm-8.1/**

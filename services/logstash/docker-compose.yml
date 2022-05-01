@@ -1,0 +1,15 @@
+services:
+  app:
+    image: $APP_IMAGE
+    hostname: "$APP_NAME.$BASE_DOMAIN"
+    networks:
+      - dev
+    environment: []
+    volumes:
+      - "${SVC_PATH}/config:/usr/share/logstash/config:ro"
+      - "${SVC_PATH}/pipeline:/usr/share/logstash/pipeline:ro"
+
+networks:
+  dev:
+    external: true
+    name: $NETWORK
